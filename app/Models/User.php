@@ -20,9 +20,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'gebruikersnaam',
         'email',
         'password',
+        'rol_naam',
+        'ingelogd',
+        'uitgelogd',
+        'is_actief',
+        'opmerking',
     ];
 
     /**
@@ -47,6 +52,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'ingelogd' => 'datetime',
+            'uitgelogd' => 'datetime',
+            'is_actief' => 'boolean',
         ];
     }
 
@@ -55,10 +63,26 @@ class User extends Authenticatable
      */
     public function initials(): string
     {
-        return Str::of($this->name)
+        return Str::of($this->gebruikersnaam)
             ->explode(' ')
             ->take(2)
             ->map(fn ($word) => Str::substr($word, 0, 1))
             ->implode('');
+    }
+
+    /**
+     * Get the name attribute (alias for gebruikersnaam for compatibility)
+     */
+    public function getNameAttribute(): string
+    {
+        return $this->gebruikersnaam;
+    }
+
+    /**
+     * Set the name attribute (alias for gebruikersnaam for compatibility)
+     */
+    public function setNameAttribute($value): void
+    {
+        $this->attributes['gebruikersnaam'] = $value;
     }
 }

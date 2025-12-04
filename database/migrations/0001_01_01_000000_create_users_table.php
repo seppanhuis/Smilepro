@@ -13,12 +13,17 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('gebruikersnaam')->unique();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('rol_naam');
+            $table->timestamp('ingelogd')->nullable();
+            $table->timestamp('uitgelogd')->nullable();
+            $table->boolean('is_actief')->default(true);
+            $table->text('opmerking')->nullable();
             $table->rememberToken();
-            $table->timestamps();
+            $table->timestamps(); // This creates created_at (datum_aangemaakt) and updated_at (datum_gewijzigd)
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

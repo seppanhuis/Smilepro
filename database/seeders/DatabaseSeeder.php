@@ -18,8 +18,10 @@ class DatabaseSeeder extends Seeder
         User::firstOrCreate(
             ['email' => 'test@example.com'],
             [
-                'name' => 'Test User',
+                'gebruikersnaam' => 'Test User',
                 'password' => 'password',
+                'rol_naam' => 'admin',
+                'is_actief' => true,
                 'email_verified_at' => now(),
             ]
         );
