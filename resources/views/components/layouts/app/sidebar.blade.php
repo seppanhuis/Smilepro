@@ -14,7 +14,9 @@
             <flux:navlist variant="outline">
                 <flux:navlist.group :heading="__('Platform')" class="grid">
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                    <flux:navlist.item icon="users" :href="route('accounts.index')" :current="request()->routeIs('accounts.index')" wire:navigate>{{ __('Accounts') }}</flux:navlist.item>
+                    @if(auth()->user()->rol_naam === 'praktijkmanagement')
+                        <flux:navlist.item icon="users" :href="route('accounts.index')" :current="request()->routeIs('accounts.index')" wire:navigate>{{ __('Accounts') }}</flux:navlist.item>
+                    @endif
                 </flux:navlist.group>
 
                 <flux:sidebar.group expandable heading="Medewerker" class="grid">

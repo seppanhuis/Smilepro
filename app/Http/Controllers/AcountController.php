@@ -12,8 +12,11 @@ class AcountController extends Controller
      */
     public function index()
     {
-         return view('accounts.index', [
-            'title' => 'Accounts'
+        $accounts = Acount::orderBy('created_at', 'desc')->get();
+
+        return view('accounts.index', [
+            'title' => 'Accounts',
+            'accounts' => $accounts
         ]);
     }
 
