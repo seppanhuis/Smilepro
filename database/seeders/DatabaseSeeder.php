@@ -13,14 +13,73 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
+        // Admin account met management rechten
         User::firstOrCreate(
-            ['email' => 'test@example.com'],
+            ['email' => 'admin@gmail.com'],
             [
-                'gebruikersnaam' => 'Test User',
-                'password' => 'password',
-                'rol_naam' => 'admin',
+                'gebruikersnaam' => 'Admin',
+                'password' => 'Admin123',
+                'rol_naam' => 'praktijkmanagement',
+                'is_actief' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Patiënt account
+        User::firstOrCreate(
+            ['email' => 'patient@gmail.com'],
+            [
+                'gebruikersnaam' => 'Patiënt',
+                'password' => 'Admin123',
+                'rol_naam' => 'patient',
+                'is_actief' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Tandarts account
+        User::firstOrCreate(
+            ['email' => 'tandarts@gmail.com'],
+            [
+                'gebruikersnaam' => 'Tandarts',
+                'password' => 'Admin123',
+                'rol_naam' => 'tandarts',
+                'is_actief' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Mondhygiënist account
+        User::firstOrCreate(
+            ['email' => 'mondhygienist@gmail.com'],
+            [
+                'gebruikersnaam' => 'Mondhygiënist',
+                'password' => 'Admin123',
+                'rol_naam' => 'mondhygiënist',
+                'is_actief' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Assistent account
+        User::firstOrCreate(
+            ['email' => 'assistent@gmail.com'],
+            [
+                'gebruikersnaam' => 'Assistent',
+                'password' => 'Admin123',
+                'rol_naam' => 'assistent',
+                'is_actief' => true,
+                'email_verified_at' => now(),
+            ]
+        );
+
+        // Praktijkmanagement account
+        User::firstOrCreate(
+            ['email' => 'praktijkmanagement@gmail.com'],
+            [
+                'gebruikersnaam' => 'Praktijkmanagement',
+                'password' => 'Admin123',
+                'rol_naam' => 'praktijkmanagement',
                 'is_actief' => true,
                 'email_verified_at' => now(),
             ]

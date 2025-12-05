@@ -3,6 +3,9 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use App\http\Controllers\AcountController;
+use App\http\Controllers\BeschikbaarheidController;
+use App\http\Controllers\MedewerkerController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -29,4 +32,8 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+
+    Route::get('/accounts', [AcountController::class, 'index'])->name('accounts.index');
+    Route::get('/beschikbaarheid', [BeschikbaarheidController::class, 'index'])->name('beschikbaarheid.index');
+    Route::get('/medewerker', [MedewerkerController::class, 'index'])->name('medewerker.index');
 });
