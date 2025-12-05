@@ -12,8 +12,17 @@ class MedewerkerController extends Controller
      */
     public function index()
     {
+        // Haal alle users op die een medewerker rol hebben
+        $medewerkers = \App\Models\User::whereIn('rol_naam', [
+            'Assistent',
+            'Tandarts',
+            'Mondhygiënist',
+            'Praktijkmanagement'
+        ])->orderBy('rol_naam', 'asc')->orderBy('gebruikersnaam', 'asc')->get();
+
         return view('medewerker.index', [
-            'title' => 'Medewerkers'
+            'title' => 'Medewerkers',
+            'medewerkers' => $medewerkers
         ]);
     }
 

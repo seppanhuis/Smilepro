@@ -1,18 +1,47 @@
-<x-layouts.app :title="__('Dashboard')">
-    <div class="flex h-full w-full flex-1 flex-col gap-4 rounded-xl">
-        <div class="grid auto-rows-min gap-4 md:grid-cols-3">
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>
-            <div class="relative aspect-video overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-                <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-            </div>
-        </div>
-        <div class="relative h-full flex-1 overflow-hidden rounded-xl border border-neutral-200 dark:border-neutral-700">
-            <x-placeholder-pattern class="absolute inset-0 size-full stroke-gray-900/20 dark:stroke-neutral-100/20" />
-        </div>
+<x-layouts.app :title="__('Medewerkers')">
+    <div class="flex h-full w-full flex-1 flex-col gap-4">
+        <x-page-heading :title="__('Medewerkers')" />
+
+        <x-table.index :headers="[
+            __('Gebruikersnaam'),
+            __('Email'),
+            __('Rol'),
+            __('Status'),
+            __('Laatst ingelogd'),
+            __('Aangemaakt op')
+        ]">
+            @forelse($medewerkers as $medewerker)
+                <x-table.row>
+                    <x-table.cell bold>{{ $medewerker->gebruikersnaam }}</x-table.cell>
+                    <x-table.cell>{{ $medewerker->email }}</x-table.cell>
+                    <x-table.cell>
+                        <x-badge
+                            :color="match($medewerker->rol_naam) {
+                                'Tandarts' => 'blue',
+                                'Mondhygiënist' => 'purple',
+                                'Praktijkmanagement' => 'lime',
+                                'Assistent' => 'zinc',
+                                default => 'zinc'
+                            }"
+                            :text="$medewerker->rol_naam"
+                        />
+                    </x-table.cell>
+                    <x-table.cell>
+                        <x-badge
+                            :color="$medewerker->is_actief ? 'green' : 'red'"
+                            :text="$medewerker->is_actief ? __('Actief') : __('Inactief')"
+                        />
+                    </x-table.cell>
+                    <x-table.cell>
+                        {{ $medewerker->ingelogd ? $medewerker->ingelogd->format('d-m-Y H:i') : '-' }}
+                    </x-table.cell>
+                    <x-table.cell>
+                        {{ $medewerker->created_at->format('d-m-Y H:i') }}
+                    </x-table.cell>
+                </x-table.row>
+            @empty
+                <x-table.empty :colspan="6" :message="__('Geen medewerkers gevonden.')" />
+            @endforelse
+        </x-table.index>
     </div>
 </x-layouts.app>

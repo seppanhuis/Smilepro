@@ -34,6 +34,8 @@ Route::middleware(['auth'])->group(function () {
         ->name('two-factor.show');
 
     Route::get('/accounts', [AcountController::class, 'index'])->middleware('role:praktijkmanagement')->name('accounts.index');
-    Route::get('/beschikbaarheid', [BeschikbaarheidController::class, 'index'])->name('beschikbaarheid.index');
-    Route::get('/medewerker', [MedewerkerController::class, 'index'])->name('medewerker.index');
+    Route::get('/medewerker', [MedewerkerController::class, 'index'])->middleware('role:praktijkmanagement')->name('medewerker.index');
+
+    // Beschikbaarheid routes - accessible for all employees
+    Route::resource('beschikbaarheid', BeschikbaarheidController::class);
 });

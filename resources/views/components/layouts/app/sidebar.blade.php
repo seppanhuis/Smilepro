@@ -19,10 +19,12 @@
                     @endif
                 </flux:navlist.group>
 
-                <flux:sidebar.group expandable heading="Medewerker" class="grid">
-                    <flux:navlist.item icon="users" :href="route('medewerker.index')" :current="request()->routeIs('medewerker.index')" wire:navigate>{{ __('Medewerkers') }}</flux:navlist.item>
-                    <flux:navlist.item icon="calendar-days" :href="route('beschikbaarheid.index')" :current="request()->routeIs('beschikbaarheid.index')" wire:navigate>{{ __('Beschikbaarheid') }}</flux:navlist.item>
-            </flux:sidebar.group>
+                @if(auth()->user()->rol_naam === 'praktijkmanagement')
+                    <flux:sidebar.group expandable heading="Medewerker" class="grid">
+                        <flux:navlist.item icon="users" :href="route('medewerker.index')" :current="request()->routeIs('medewerker.index')" wire:navigate>{{ __('Medewerkers') }}</flux:navlist.item>
+                        <flux:navlist.item icon="calendar-days" :href="route('beschikbaarheid.index')" :current="request()->routeIs('beschikbaarheid.index')" wire:navigate>{{ __('Beschikbaarheid') }}</flux:navlist.item>
+                    </flux:sidebar.group>
+                @endif
             </flux:navlist>
 
             <flux:spacer />
