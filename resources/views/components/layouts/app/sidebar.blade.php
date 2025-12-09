@@ -16,15 +16,12 @@
                     <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                     @if(auth()->user()->rol_naam === 'praktijkmanagement')
                         <flux:navlist.item icon="users" :href="route('accounts.index')" :current="request()->routeIs('accounts.index')" wire:navigate>{{ __('Accounts') }}</flux:navlist.item>
+                        <flux:navlist.item icon="users" :href="route('medewerker.index')" :current="request()->routeIs('medewerker.index')" wire:navigate>{{ __('Medewerkers') }}</flux:navlist.item>
+                        <flux:navlist.item icon="calendar-days" :href="route('beschikbaarheid.index')" :current="request()->routeIs('beschikbaarheid.index')" wire:navigate>{{ __('Beschikbaarheid') }}</flux:navlist.item>
                     @endif
                 </flux:navlist.group>
 
-                @if(auth()->user()->rol_naam === 'praktijkmanagement')
-                    <flux:sidebar.group expandable heading="Medewerker" class="grid">
-                        <flux:navlist.item icon="users" :href="route('medewerker.index')" :current="request()->routeIs('medewerker.index')" wire:navigate>{{ __('Medewerkers') }}</flux:navlist.item>
-                        <flux:navlist.item icon="calendar-days" :href="route('beschikbaarheid.index')" :current="request()->routeIs('beschikbaarheid.index')" wire:navigate>{{ __('Beschikbaarheid') }}</flux:navlist.item>
-                    </flux:sidebar.group>
-                @endif
+
             </flux:navlist>
 
             <flux:spacer />
