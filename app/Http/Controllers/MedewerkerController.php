@@ -10,15 +10,20 @@ class MedewerkerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Haal alle users op die een medewerker rol hebben
-        $medewerkers = \App\Models\User::whereIn('rol_naam', [
-            'Assistent',
-            'Tandarts',
-            'Mondhygiënist',
-            'Praktijkmanagement'
-        ])->orderBy('rol_naam', 'asc')->orderBy('gebruikersnaam', 'asc')->get();
+        // Test mode: simuleer lege staat met ?test_empty=1
+        if ($request->has('test_empty') && $request->get('test_empty') == '1') {
+            $medewerkers = collect();
+        } else {
+            // Haal alle users op die een medewerker rol hebben
+            $medewerkers = \App\Models\User::whereIn('rol_naam', [
+                'Assistent',
+                'Tandarts',
+                'Mondhygiënist',
+                'Praktijkmanagement'
+            ])->orderBy('rol_naam', 'asc')->orderBy('gebruikersnaam', 'asc')->get();
+        }
 
         return view('medewerker.index', [
             'title' => 'Medewerkers',

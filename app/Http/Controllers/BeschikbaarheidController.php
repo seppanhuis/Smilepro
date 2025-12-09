@@ -11,14 +11,19 @@ class BeschikbaarheidController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
 
-        // Iedereen ziet alle beschikbaarheden
-        $beschikbaarheden = Beschikbaarheid::with('user')
-            ->orderBy('datum_vanaf', 'desc')
-            ->get();
+        // Test mode: simuleer lege staat met ?test_empty=1
+        if ($request->has('test_empty') && $request->get('test_empty') == '1') {
+            $beschikbaarheden = collect();
+        } else {
+            // Iedereen ziet alle beschikbaarheden
+            $beschikbaarheden = Beschikbaarheid::with('user')
+                ->orderBy('datum_vanaf', 'desc')
+                ->get();
+        }
 
         $medewerkers = User::whereIn('rol_naam', ['Assistent', 'Tandarts', 'Mondhygiënist', 'Praktijkmanagement'])
             ->orderBy('gebruikersnaam')

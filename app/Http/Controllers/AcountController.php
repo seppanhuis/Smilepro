@@ -10,9 +10,14 @@ class AcountController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $accounts = Acount::orderBy('rol_naam', 'asc')->orderBy('gebruikersnaam', 'asc')->get();
+        // Test mode: simuleer lege staat met ?test_empty=1
+        if ($request->has('test_empty') && $request->get('test_empty') == '1') {
+            $accounts = collect();
+        } else {
+            $accounts = Acount::orderBy('rol_naam', 'asc')->orderBy('gebruikersnaam', 'asc')->get();
+        }
 
         return view('accounts.index', [
             'title' => 'Accounts',
