@@ -6,6 +6,7 @@ use Livewire\Volt\Volt;
 use App\http\Controllers\AcountController;
 use App\http\Controllers\BeschikbaarheidController;
 use App\http\Controllers\MedewerkerController;
+use App\Http\Controllers\PatientController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -14,6 +15,9 @@ Route::get('/', function () {
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
+
+    Route::get('/patient', [PatientController::class, 'index'])->name('patient.index');;
+
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');

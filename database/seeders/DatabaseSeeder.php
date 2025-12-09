@@ -1,11 +1,11 @@
 <?php
-
+ 
 namespace Database\Seeders;
-
+ 
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+ 
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
+ 
         // Patiënt account
         User::firstOrCreate(
             ['email' => 'patient@gmail.com'],
@@ -36,7 +36,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
+ 
         // Tandarts account
         User::firstOrCreate(
             ['email' => 'tandarts@gmail.com'],
@@ -48,7 +48,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
+ 
         // Mondhygiënist account
         User::firstOrCreate(
             ['email' => 'mondhygienist@gmail.com'],
@@ -60,7 +60,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
+ 
         // Assistent account
         User::firstOrCreate(
             ['email' => 'assistent@gmail.com'],
@@ -72,7 +72,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
+ 
         // Praktijkmanagement account
         User::firstOrCreate(
             ['email' => 'praktijkmanagement@gmail.com'],
