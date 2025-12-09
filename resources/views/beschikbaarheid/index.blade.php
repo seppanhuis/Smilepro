@@ -48,18 +48,24 @@
                                 $canEdit = auth()->user()->rol_naam === 'Praktijkmanagement' || $beschikbaarheid->user_id === auth()->id();
                             @endphp
                             @if($canEdit)
-                                <a href="{{ route('beschikbaarheid.edit', $beschikbaarheid) }}" class="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300">
+                                <a href="{{ route('beschikbaarheid.edit', $beschikbaarheid) }}" class="inline-flex items-center gap-1 rounded-md bg-blue-50 dark:bg-blue-900/30 px-3 py-1.5 text-sm font-medium text-blue-700 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900/50 transition border border-blue-200 dark:border-blue-800">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                                    </svg>
                                     {{ __('Bewerken') }}
                                 </a>
                                 <form action="{{ route('beschikbaarheid.destroy', $beschikbaarheid) }}" method="POST" class="inline" onsubmit="return confirm('Weet je zeker dat je dit wilt verwijderen?');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300">
+                                    <button type="submit" class="inline-flex items-center gap-1 rounded-md bg-red-50 dark:bg-red-900/30 px-3 py-1.5 text-sm font-medium text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/50 transition border border-red-200 dark:border-red-800">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                        </svg>
                                         {{ __('Verwijderen') }}
                                     </button>
                                 </form>
                             @else
-                                <span class="text-zinc-400">-</span>
+                                <span class="text-zinc-400 dark:text-zinc-600">-</span>
                             @endif
                         </div>
                     </x-table.cell>
