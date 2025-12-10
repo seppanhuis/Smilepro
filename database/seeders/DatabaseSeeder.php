@@ -527,5 +527,56 @@ class DatabaseSeeder extends Seeder
                 array_merge($data, ['created_at' => now(), 'updated_at' => now()])
             );
         }
+
+        // ==================== FACTUREN ====================
+        $behandelingIds = DB::table('behandelingen')->pluck('id')->toArray();
+        $factuurData = [
+            [
+                'nummer' => 'F2025001',
+                'patient_id' => $patient1Id,
+                'behandeling_id' => $behandelingIds[0] ?? null,
+                'bedrag' => 45.00,
+                'status' => 'Verzonden',
+                'datum' => '2025-11-16',
+            ],
+            [
+                'nummer' => 'F2025002',
+                'patient_id' => $patient2Id,
+                'behandeling_id' => $behandelingIds[1] ?? null,
+                'bedrag' => 65.00,
+                'status' => 'Verzonden',
+                'datum' => '2025-11-21',
+            ],
+            [
+                'nummer' => 'F2025003',
+                'patient_id' => $patient3Id,
+                'behandeling_id' => $behandelingIds[2] ?? null,
+                'bedrag' => 125.00,
+                'status' => 'Verzonden',
+                'datum' => '2025-11-23',
+            ],
+            [
+                'nummer' => 'F2025004',
+                'patient_id' => $patient4Id,
+                'behandeling_id' => $behandelingIds[3] ?? null,
+                'bedrag' => 85.00,
+                'status' => 'Verzonden',
+                'datum' => '2025-12-19',
+            ],
+            [
+                'nummer' => 'F2025005',
+                'patient_id' => $patient5Id,
+                'behandeling_id' => $behandelingIds[4] ?? null,
+                'bedrag' => 350.00,
+                'status' => 'Verzonden',
+                'datum' => '2025-10-11',
+            ],
+        ];
+
+        foreach ($factuurData as $data) {
+            DB::table('facturen')->insert(
+                array_merge($data, ['created_at' => now(), 'updated_at' => now()])
+            );
+        }
     }
 }
