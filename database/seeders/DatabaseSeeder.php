@@ -1,14 +1,14 @@
 <?php
-
+ 
 namespace Database\Seeders;
-
+ 
 use App\Models\User;
 use App\Models\Persoon;
 use App\Models\Medewerker;
 use App\Models\Beschikbaarheid;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-
+ 
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -28,7 +28,7 @@ class DatabaseSeeder extends Seeder
                 'email_verified_at' => now(),
             ]
         );
-
+ 
         // Patiënt account
         $patient1 = User::firstOrCreate(
             ['email' => 'patient@gmail.com'],
@@ -41,6 +41,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // Tandarts account
         $tandarts = User::firstOrCreate(
             ['email' => 'tandarts@gmail.com'],
@@ -53,6 +54,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // Mondhygiënist account
         $mondhygienist = User::firstOrCreate(
             ['email' => 'mondhygienist@gmail.com'],
@@ -65,6 +67,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // Assistent account
         $assistent = User::firstOrCreate(
             ['email' => 'assistent@gmail.com'],
@@ -77,6 +80,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // Praktijkmanagement account
         $management = User::firstOrCreate(
             ['email' => 'praktijkmanagement@gmail.com'],
@@ -89,6 +93,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // Extra user accounts
         $patient2 = User::firstOrCreate(
             ['email' => 'jan.jansen@gmail.com'],
@@ -101,6 +106,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $patient3 = User::firstOrCreate(
             ['email' => 'marie.smit@gmail.com'],
             [
@@ -112,6 +118,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // ==================== PERSONEN ====================
         $persoon1 = Persoon::firstOrCreate(
             ['gebruiker_id' => $patient1->id],
@@ -123,6 +130,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $persoon2 = Persoon::firstOrCreate(
             ['gebruiker_id' => $tandarts->id],
             [
@@ -133,6 +141,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $persoon3 = Persoon::firstOrCreate(
             ['gebruiker_id' => $mondhygienist->id],
             [
@@ -143,6 +152,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $persoon4 = Persoon::firstOrCreate(
             ['gebruiker_id' => $assistent->id],
             [
@@ -153,6 +163,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $persoon5 = Persoon::firstOrCreate(
             ['gebruiker_id' => $management->id],
             [
@@ -163,6 +174,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $persoon6 = Persoon::firstOrCreate(
             ['gebruiker_id' => $patient2->id],
             [
@@ -173,6 +185,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $persoon7 = Persoon::firstOrCreate(
             ['gebruiker_id' => $patient3->id],
             [
@@ -183,6 +196,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // Extra personen zonder gebruiker account
         $persoon8 = Persoon::firstOrCreate(
             ['voornaam' => 'Emma', 'achternaam' => 'de Vries'],
@@ -193,6 +207,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $persoon9 = Persoon::firstOrCreate(
             ['voornaam' => 'Lucas', 'achternaam' => 'Bakker'],
             [
@@ -202,6 +217,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // ==================== PATIENTEN ====================
         $patientData = [
             ['persoon_id' => $persoon1->id, 'nummer' => 'P001', 'medisch_dossier' => 'Geen bijzonderheden', 'is_actief' => true],
@@ -211,6 +227,7 @@ class DatabaseSeeder extends Seeder
             ['persoon_id' => $persoon9->id, 'nummer' => 'P005', 'medisch_dossier' => 'Geen bijzonderheden', 'is_actief' => true],
         ];
 
+ 
         foreach ($patientData as $data) {
             DB::table('patienten')->updateOrInsert(
                 ['nummer' => $data['nummer']],
@@ -218,12 +235,14 @@ class DatabaseSeeder extends Seeder
             );
         }
 
+ 
         $patient1Id = DB::table('patienten')->where('nummer', 'P001')->value('id');
         $patient2Id = DB::table('patienten')->where('nummer', 'P002')->value('id');
         $patient3Id = DB::table('patienten')->where('nummer', 'P003')->value('id');
         $patient4Id = DB::table('patienten')->where('nummer', 'P004')->value('id');
         $patient5Id = DB::table('patienten')->where('nummer', 'P005')->value('id');
 
+ 
         // ==================== MEDEWERKERS ====================
         $medewerker1 = Medewerker::firstOrCreate(
             ['nummer' => 'M001'],
@@ -235,6 +254,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $medewerker2 = Medewerker::firstOrCreate(
             ['nummer' => 'M002'],
             [
@@ -245,6 +265,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $medewerker3 = Medewerker::firstOrCreate(
             ['nummer' => 'M003'],
             [
@@ -255,6 +276,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $medewerker4 = Medewerker::firstOrCreate(
             ['nummer' => 'M004'],
             [
@@ -265,6 +287,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // Extra medewerker
         $persoon10 = Persoon::firstOrCreate(
             ['voornaam' => 'Sophie', 'achternaam' => 'Visser'],
@@ -275,6 +298,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         $medewerker5 = Medewerker::firstOrCreate(
             ['nummer' => 'M005'],
             [
@@ -285,6 +309,7 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+ 
         // ==================== BESCHIKBAARHEDEN ====================
         $beschikbaarheidData = [
             [
@@ -335,6 +360,7 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
+ 
         foreach ($beschikbaarheidData as $data) {
             Beschikbaarheid::firstOrCreate(
                 [
@@ -346,6 +372,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
+ 
         // ==================== CONTACTS ====================
         $contactData = [
             [
@@ -401,6 +428,7 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
+ 
         foreach ($contactData as $data) {
             DB::table('contacts')->updateOrInsert(
                 ['patient_id' => $data['patient_id']],
@@ -408,6 +436,7 @@ class DatabaseSeeder extends Seeder
             );
         }
 
+ 
         // ==================== AFSPRAKEN ====================
         $afspraakData = [
             [
@@ -457,12 +486,14 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
+ 
         foreach ($afspraakData as $data) {
             DB::table('afspraken')->insert(
                 array_merge($data, ['created_at' => now(), 'updated_at' => now()])
             );
         }
 
+ 
         // ==================== BEHANDELINGEN ====================
         $behandelingData = [
             [
@@ -522,12 +553,14 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
+ 
         foreach ($behandelingData as $data) {
             DB::table('behandelingen')->insert(
                 array_merge($data, ['created_at' => now(), 'updated_at' => now()])
             );
         }
 
+ 
         // ==================== FACTUREN ====================
         $behandelingIds = DB::table('behandelingen')->pluck('id')->toArray();
         $factuurData = [
@@ -573,6 +606,7 @@ class DatabaseSeeder extends Seeder
             ],
         ];
 
+ 
         foreach ($factuurData as $data) {
             DB::table('facturen')->insert(
                 array_merge($data, ['created_at' => now(), 'updated_at' => now()])

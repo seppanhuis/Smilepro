@@ -20,6 +20,10 @@
                         <flux:navlist.item icon="calendar-days" :href="route('beschikbaarheid.index')" :current="request()->routeIs('beschikbaarheid.index')" wire:navigate>{{ __('Beschikbaarheid') }}</flux:navlist.item>
                         <flux:navlist.item icon="home" :href="route('patient.index')" :current="request()->routeIs('patient.index')" wire:navigate>{{ __('Patient') }}</flux:navlist.item>
                     @endif
+                    <flux:navlist.item icon="calendar" :href="route('afspraken.index')" :current="request()->routeIs('afspraken.*')" wire:navigate>Afspraken Overzicht</flux:navlist.item>
+
+                    
+
                 </flux:navlist.group>
             </flux:navlist>
 
