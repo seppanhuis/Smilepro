@@ -19,7 +19,13 @@
                         <flux:navlist.item icon="users" :href="route('medewerker.index')" :current="request()->routeIs('medewerker.index')" wire:navigate>{{ __('Medewerkers') }}</flux:navlist.item>
                         <flux:navlist.item icon="calendar-days" :href="route('beschikbaarheid.index')" :current="request()->routeIs('beschikbaarheid.index')" wire:navigate>{{ __('Beschikbaarheid') }}</flux:navlist.item>
                         <flux:navlist.item icon="home" :href="route('patient.index')" :current="request()->routeIs('patient.index')" wire:navigate>{{ __('Patient') }}</flux:navlist.item>
-                    @endif
+                        <flux:navlist.item icon="users"
+                            :href="route('communicatie.index', ['patientId' => isset($patientId) ? $patientId : 1])"
+                            :current="request()->routeIs('communicatie.index')"
+                            wire:navigate>
+                            {{ __('Communicatie') }}
+                        </flux:navlist.item>
+                        @endif
                 </flux:navlist.group>
             </flux:navlist>
 

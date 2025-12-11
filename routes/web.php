@@ -7,6 +7,7 @@ use App\http\Controllers\AcountController;
 use App\http\Controllers\BeschikbaarheidController;
 use App\http\Controllers\MedewerkerController;
 use App\Http\Controllers\PatientController;
+use App\Http\Controllers\CommunicatieController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -42,4 +43,10 @@ Route::middleware(['auth'])->group(function () {
 
     // Beschikbaarheid routes - accessible for all employees
     Route::resource('beschikbaarheid', BeschikbaarheidController::class);
+
+    Route::get('/communicatie/{patientId}', [CommunicatieController::class, 'index'])
+    ->name('communicatie.index');
+
+Route::get('/communicatie/{patientId}/{medewerkerId}', [CommunicatieController::class, 'gesprek'])
+    ->name('communicatie.gesprek');
 });

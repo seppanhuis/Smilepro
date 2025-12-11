@@ -1,5 +1,4 @@
 DELIMITER $$
-
 DROP PROCEDURE IF EXISTS Sp_GetAllPatiënten;
 $$
 CREATE PROCEDURE Sp_GetAllPatiënten()
