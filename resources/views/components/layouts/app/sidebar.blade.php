@@ -28,11 +28,12 @@
                             {{ __('Communicatie') }}
                         </flux:navlist.item>
                     @endif
+                        <flux:navlist.item icon="calendar" :href="route('afspraken.index')" :current="request()->routeIs('afspraken.index')" wire:navigate>{{ __('Afspraken') }}</flux:navlist.item>
                 </flux:navlist.group>
             </flux:navlist>
 
-        
-            
+
+
 
             <flux:spacer />
 
