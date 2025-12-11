@@ -17,10 +17,10 @@
                     <x-table.cell>
                         <x-badge
                             :color="match($medewerker->rol_naam) {
-                                'Tandarts' => 'blue',
-                                'Mondhygiënist' => 'purple',
-                                'Praktijkmanagement' => 'lime',
-                                'Assistent' => 'zinc',
+                                'tandarts' => 'blue',
+                                'mondhygiënist' => 'purple',
+                                'praktijkmanagement' => 'lime',
+                                'assistent' => 'zinc',
                                 default => 'zinc'
                             }"
                             :text="$medewerker->rol_naam"
