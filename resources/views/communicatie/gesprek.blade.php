@@ -17,7 +17,7 @@
                 @foreach($berichten as $b)
                     <!-- Bepaal of bericht van medewerker of van patiënt is -->
                     @php
-                        $isMedewerker = $b->medewerker_id == $medewerkerId;
+                        $isMedewerker = $b->afzender_id == $medewerkerId;
                     @endphp
 
                     <div class="p-3 rounded shadow
@@ -26,10 +26,10 @@
                             <strong>
                                 {{ $isMedewerker ? __('Medewerker') : __('U') }}
                             </strong>
-                            - {{ \Carbon\Carbon::parse($b->verzonden_datum)->format('d-m-Y H:i') }}
+                            - {{ \Carbon\Carbon::parse($b->datum)->format('d-m-Y H:i') }}
                         </div>
                         <p>{{ $b->bericht }}</p>
-                        @if($b->opmerking)
+                        @if(property_exists($b, 'opmerking') && $b->opmerking)
                             <small class="italic text-gray-500">{{ $b->opmerking }}</small>
                         @endif
                     </div>

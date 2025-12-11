@@ -14,7 +14,7 @@ class CommunicatieController extends Controller
         $this->model = new Communicatie();
     }
 
-    // Stap 1 – toon lijst van medewerkers
+    // Stap 1 – toon lijst van medewerkers voor een patient
     public function index($patientId)
     {
         $medewerkers = $this->model->getMedewerkersVoorPatient($patientId);
@@ -25,7 +25,7 @@ class CommunicatieController extends Controller
         ]);
     }
 
-    // Stap 2 – toon chat met medewerker
+    // Stap 2 – toon chat met geselecteerde medewerker
     public function gesprek($patientId, $medewerkerId)
     {
         $berichten = $this->model->getBerichtenMetMedewerker($patientId, $medewerkerId);

@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('communicaties', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('patient_id')->constrained('patienten')->onDelete('cascade');
-            $table->foreignId('medewerker_id')->constrained('medewerkers')->onDelete('cascade');
+            $table->foreignId('afzender_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('ontvanger_id')->constrained('users')->onDelete('cascade');
             $table->text('bericht');
-            $table->timestamp('verzonden_datum');
+            $table->timestamp('datum');
             $table->boolean('is_actief')->default(true);
             $table->text('opmerking')->nullable();
             $table->timestamps();

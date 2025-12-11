@@ -10,10 +10,10 @@ class Communicatie extends Model
     protected $table = 'communicaties';
 
     protected $fillable = [
-        'patient_id',
-        'medewerker_id',
+        'afzender_id',
+        'ontvanger_id',
         'bericht',
-        'verzonden_datum',
+        'datum',
         'is_actief',
         'opmerking'
     ];
@@ -21,12 +21,12 @@ class Communicatie extends Model
     // Haal unieke medewerkers voor een patient via stored procedure
     public function getMedewerkersVoorPatient($patientId)
     {
-        return DB::select('CALL sp_GetMedewerkersVoorPatient(?)', [$patientId]);
+        return DB::select('CALL sp_GetGesprekkenVanPatient(?)', [$patientId]);
     }
 
     // Haal alle berichten met een medewerker via stored procedure
     public function getBerichtenMetMedewerker($patientId, $medewerkerId)
     {
-        return DB::select('CALL sp_GetBerichtenMetMedewerker(?, ?)', [$patientId, $medewerkerId]);
+        return DB::select('CALL sp_GetBerichtenPatientMedewerker(?, ?)', [$patientId, $medewerkerId]);
     }
 }

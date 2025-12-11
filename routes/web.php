@@ -8,6 +8,7 @@ use App\http\Controllers\BeschikbaarheidController;
 use App\http\Controllers\MedewerkerController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\CommunicatieController;
+use App\Livewire\AfsprakenOverzicht;
 
 Route::get('/', function () {
     return view('welcome');
@@ -21,6 +22,7 @@ Route::view('dashboard', 'dashboard')
 
 
 Route::middleware(['auth'])->group(function () {
+
     Route::redirect('settings', 'settings/profile');
 
     Volt::route('settings/profile', 'settings.profile')->name('profile.edit');
@@ -43,10 +45,15 @@ Route::middleware(['auth'])->group(function () {
 
     // Beschikbaarheid routes - accessible for all employees
     Route::resource('beschikbaarheid', BeschikbaarheidController::class);
-
     Route::get('/communicatie/{patientId}', [CommunicatieController::class, 'index'])
-    ->name('communicatie.index');
+        ->name('communicatie.index');
 
-Route::get('/communicatie/{patientId}/{medewerkerId}', [CommunicatieController::class, 'gesprek'])
-    ->name('communicatie.gesprek');
+    Route::get('/communicatie/{patientId}/{medewerkerId}', [CommunicatieController::class, 'gesprek'])
+        ->name('communicatie.gesprek');
+    // ============================
+    // AFSPRAKEN OVERZICHT (LIVEWIRE)
+    // ============================
+    Route::get('/afspraken', AfsprakenOverzicht::class)
+        ->name('afspraken.index');
+
 });
