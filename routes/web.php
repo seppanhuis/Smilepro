@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 use Livewire\Volt\Volt;
+use App\Livewire\AfsprakenOverzicht;
 
 Route::get('/', function () {
     return view('welcome');
@@ -13,6 +14,7 @@ Route::view('dashboard', 'dashboard')
     ->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
+
     Route::redirect('settings', 'settings/profile');
 
     Volt::route('settings/profile', 'settings.profile')->name('profile.edit');
@@ -29,4 +31,11 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
-});
+
+    // ============================
+    // AFSPRAKEN OVERZICHT (LIVEWIRE)
+    // ============================
+    Route::get('/afspraken', AfsprakenOverzicht::class)
+        ->name('afspraken.index');
+
+}); // einde middleware group
