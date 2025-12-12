@@ -1,0 +1,97 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Log;
+
+/**
+ * Model voor facturen
+ *
+ * Representeert een factuur in het systeem die gekoppeld is aan een patiënt
+ * en een behandeling. Bevat informatie over factuurnummer, datum, bedrag en status.
+ */
+class Factuur extends Model
+{
+    /**
+     * De tabel die bij dit model hoort
+     *
+     * @var string
+     */
+    protected $table = 'facturen';
+
+    /**
+     * Kolommen die mass-assignable zijn
+     *
+     * @var array<string>
+     */
+    protected $fillable = [
+        'patient_id',
+        'behandeling_id',
+        'nummer',
+        'datum',
+        'bedrag',
+        'status',
+        'is_actief',
+        'opmerking',
+    ];
+
+    /**
+     * Type casting voor attributen
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'datum' => 'date',
+        'bedrag' => 'decimal:2',
+        'is_actief' => 'boolean',
+    ];
+
+    /**
+     * Relatie met de patiënt
+     *
+     * Elke factuur hoort bij één patiënt
+     *
+     * @return BelongsTo
+     */
+    public function patient(): BelongsTo
+    {
+        return $this->belongsTo(Patient::class);
+    }
+
+    /**
+     * Relatie met de behandeling
+     *
+     * Elke factuur hoort bij één behandeling
+     *
+     * @return BelongsTo
+     */
+    public function behandeling(): BelongsTo
+    {
+        return $this->belongsTo(Behandeling::class);
+    }
+
+    /**
+     * Haal alle facturen op met relaties
+     *
+     * Haalt alle facturen op inclusief patiënt- en behandelingsinformatie,
+     * gesorteerd op datum (nieuwste eerst).
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getAllFacturen()
+    {
+        try {
+            return self::with(['patient.persoon', 'behandeling'])
+                ->orderBy('datum', 'desc')
+                ->get();
+        } catch (\Exception $e) {
+            // Log de fout voor debugging
+            Log::error('Fout bij ophalen facturen in model: ' . $e->getMessage());
+
+            // Retourneer lege collectie bij fout
+            return collect();
+        }
+    }
+}

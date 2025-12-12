@@ -16,7 +16,7 @@ class PatientModel extends Model
     {
         try {
             $result = DB::select("CALL Sp_GetAllPatiënten()");
-            return $result; // array of stdClass objects
+            return $result ?? []; // array of stdClass objects
         } catch (\Exception $e) {
             return [];
         }

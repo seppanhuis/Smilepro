@@ -8,6 +8,7 @@ use App\http\Controllers\BeschikbaarheidController;
 use App\http\Controllers\MedewerkerController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\CommunicatieController;
+use App\Http\Controllers\FactuurController;
 use App\Livewire\AfsprakenOverzicht;
 
 Route::get('/', function () {
@@ -55,5 +56,12 @@ Route::middleware(['auth'])->group(function () {
     // ============================
     Route::get('/afspraken', AfsprakenOverzicht::class)
         ->name('afspraken.index');
+
+    // ============================
+    // FACTUREN OVERZICHT
+    // ============================
+    Route::get('/facturen', [FactuurController::class, 'index'])
+        ->middleware('role:praktijkmanagement')
+        ->name('factuur.index');
 
 });

@@ -29,6 +29,9 @@
                         </flux:navlist.item>
                     @endif
                         <flux:navlist.item icon="calendar" :href="route('afspraken.index')" :current="request()->routeIs('afspraken.index')" wire:navigate>{{ __('Afspraken') }}</flux:navlist.item>
+                    @if(auth()->user()->rol_naam === 'praktijkmanagement')
+                        <flux:navlist.item icon="document-text" :href="route('factuur.index')" :current="request()->routeIs('factuur.index')" wire:navigate>{{ __('Facturen') }}</flux:navlist.item>
+                    @endif
                 </flux:navlist.group>
             </flux:navlist>
 
