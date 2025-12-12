@@ -14,10 +14,14 @@ class PatientController extends Controller
         $this->PatientModel = new PatientModel();
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        // Get all patients
-        $patients = $this->PatientModel->getPatientData();
+        // Test mode: simuleer lege staat met ?test_empty=1
+        if ($request->has('test_empty') && $request->get('test_empty') == '1') {
+            $patients = collect();
+        } else {
+            $patients = $this->PatientModel->getPatientData();
+        }
 
         return view('patient.index', [
             'title' => 'Overzicht patiënten',
