@@ -94,4 +94,35 @@ class Factuur extends Model
             return collect();
         }
     }
+
+    /**
+     * Genereer het volgende factuurnummer
+     *
+     * Format: INV-{JAAR}-{VOLGNUMMER}
+     * Bijvoorbeeld: INV-2026-001
+     *
+     * @return string
+     */
+    public static function generateNextInvoiceNumber()
+    {
+        $year = date('Y');
+        $prefix = "INV-{$year}-";
+
+        // Haal het laatste factuurnummer op voor dit jaar
+        $lastInvoice = self::where('nummer', 'LIKE', $prefix . '%')
+            ->orderBy('nummer', 'desc')
+            ->first();
+
+        if ($lastInvoice) {
+            // Haal het volgnummer uit het laatste factuurnummer
+            $lastNumber = (int) str_replace($prefix, '', $lastInvoice->nummer);
+            $nextNumber = $lastNumber + 1;
+        } else {
+            // Eerste factuur van dit jaar
+            $nextNumber = 1;
+        }
+
+        // Format met leading zeros (3 cijfers)
+        return $prefix . str_pad($nextNumber, 3, '0', STR_PAD_LEFT);
+    }
 }

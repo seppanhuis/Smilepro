@@ -44,7 +44,15 @@ class FactuurController extends Controller
      */
     public function create()
     {
-        //
+        $patienten = \App\Models\Patient::getForDropdown();
+        $behandelingen = \App\Models\Behandeling::getForDropdown();
+        $nextInvoiceNumber = Factuur::generateNextInvoiceNumber();
+
+        return view('factuur.create', [
+            'patienten' => $patienten,
+            'behandelingen' => $behandelingen,
+            'nextInvoiceNumber' => $nextInvoiceNumber,
+        ]);
     }
 
     /**
@@ -52,7 +60,32 @@ class FactuurController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'patient_id' => 'required|exists:patienten,id',
+            'behandeling_id' => 'nullable|exists:behandelingen,id',
+            'nummer' => 'nullable|string|max:50|unique:facturen,nummer',
+            'datum' => 'required|date',
+            'bedrag' => 'required|numeric|min:0',
+            'status' => 'required|in:Niet-Verzonden,Verzonden,Betaald,Onbetaald',
+            'opmerking' => 'nullable|string',
+        ]);
+
+        // Genereer automatisch factuurnummer als deze niet is opgegeven
+        if (empty($validated['nummer'])) {
+            $validated['nummer'] = Factuur::generateNextInvoiceNumber();
+        }
+
+        $validated['is_actief'] = true;
+
+        try {
+            Factuur::create($validated);
+            return redirect()->route('factuur.index')
+                ->with('success', 'Factuur succesvol aangemaakt.');
+        } catch (\Exception $e) {
+            Log::error('Fout bij aanmaken factuur: ' . $e->getMessage());
+            return back()->withInput()
+                ->with('error', 'Er is een fout opgetreden bij het aanmaken van de factuur.');
+        }
     }
 
     /**

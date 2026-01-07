@@ -20,4 +20,27 @@ class Patient extends Model
     {
         return $this->belongsTo(Persoon::class);
     }
+
+    /**
+     * Haal actieve patiënten op voor dropdown selectie
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getForDropdown()
+    {
+        return self::with('persoon')
+            ->where('is_actief', true)
+            ->get()
+            ->map(function($patient) {
+                $naam = $patient->persoon->voornaam . ' ';
+                if ($patient->persoon->tussenvoegsel) {
+                    $naam .= $patient->persoon->tussenvoegsel . ' ';
+                }
+                $naam .= $patient->persoon->achternaam;
+                return [
+                    'id' => $patient->id,
+                    'naam' => $naam,
+                ];
+            });
+    }
 }

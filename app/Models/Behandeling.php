@@ -72,4 +72,28 @@ class Behandeling extends Model
     {
         return $this->belongsTo(Patient::class);
     }
+
+    /**
+     * Haal actieve behandelingen op voor dropdown selectie
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public static function getForDropdown()
+    {
+        return self::with(['patient.persoon'])
+            ->where('is_actief', true)
+            ->get()
+            ->map(function($behandeling) {
+                $naam = $behandeling->patient->persoon->voornaam . ' ';
+                if ($behandeling->patient->persoon->tussenvoegsel) {
+                    $naam .= $behandeling->patient->persoon->tussenvoegsel . ' ';
+                }
+                $naam .= $behandeling->patient->persoon->achternaam;
+                return [
+                    'id' => $behandeling->id,
+                    'label' => $naam . ' - ' . $behandeling->behandeling_type . ' (' . $behandeling->datum->format('d-m-Y') . ')',
+                    'patient_id' => $behandeling->patient_id,
+                ];
+            });
+    }
 }

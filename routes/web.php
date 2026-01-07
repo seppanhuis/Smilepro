@@ -9,13 +9,14 @@ use App\http\Controllers\MedewerkerController;
 use App\Http\Controllers\PatientController;
 use App\Http\Controllers\CommunicatieController;
 use App\Http\Controllers\FactuurController;
+use App\Http\Controllers\DashboardController;
 use App\Livewire\AfsprakenOverzicht;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
-Route::view('dashboard', 'dashboard')
+Route::get('dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
@@ -42,7 +43,21 @@ Route::middleware(['auth'])->group(function () {
         ->name('two-factor.show');
 
     Route::get('/accounts', [AcountController::class, 'index'])->middleware('role:praktijkmanagement')->name('accounts.index');
-    Route::get('/medewerker', [MedewerkerController::class, 'index'])->middleware('role:praktijkmanagement')->name('medewerker.index');
+
+    // ============================
+    // MEDEWERKER BEHEER
+    // ============================
+    Route::get('/medewerker', [MedewerkerController::class, 'index'])
+        ->middleware('role:praktijkmanagement')
+        ->name('medewerker.index');
+
+    Route::get('/medewerker/create', [MedewerkerController::class, 'create'])
+        ->middleware('role:praktijkmanagement')
+        ->name('medewerker.create');
+
+    Route::post('/medewerker', [MedewerkerController::class, 'store'])
+        ->middleware('role:praktijkmanagement')
+        ->name('medewerker.store');
 
     // Beschikbaarheid routes - accessible for all employees
     Route::resource('beschikbaarheid', BeschikbaarheidController::class);
@@ -63,5 +78,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/facturen', [FactuurController::class, 'index'])
         ->middleware('role:praktijkmanagement')
         ->name('factuur.index');
+
+    Route::get('/facturen/create', [FactuurController::class, 'create'])
+        ->middleware('role:praktijkmanagement')
+        ->name('factuur.create');
+
+    Route::post('/facturen', [FactuurController::class, 'store'])
+        ->middleware('role:praktijkmanagement')
+        ->name('factuur.store');
 
 });

@@ -1,6 +1,17 @@
 <x-layouts.app :title="__('Facturen')">
     <div class="flex h-full w-full flex-1 flex-col gap-4">
-        <x-page-heading :title="__('Facturen')" />
+        <div class="flex items-center justify-between">
+            <x-page-heading :title="__('Facturen')" />
+            <a
+                href="{{ route('factuur.create') }}"
+                class="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+                <svg class="-ml-1 mr-2 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
+                </svg>
+                {{ __('Nieuwe Factuur') }}
+            </a>
+        </div>
 
         <x-table.index :headers="[
             __('Factuurnummer'),
