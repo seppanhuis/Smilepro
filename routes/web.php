@@ -59,6 +59,26 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('role:praktijkmanagement')
         ->name('medewerker.store');
 
+    Route::get('/medewerker/{medewerker}/edit', [MedewerkerController::class, 'edit'])
+        ->middleware('role:praktijkmanagement')
+        ->name('medewerker.edit');
+
+    Route::get('/medewerker/{medewerker}', function(\App\Models\Medewerker $medewerker) {
+        return redirect()->route('medewerker.index');
+    })->middleware('role:praktijkmanagement')
+        ->name('medewerker.show');
+
+    Route::put('/medewerker/{medewerker}', [MedewerkerController::class, 'update'])
+        ->middleware('role:praktijkmanagement')
+        ->name('medewerker.update');
+
+    Route::delete('/medewerker/{medewerker}', [MedewerkerController::class, 'destroy'])
+        ->middleware('role:praktijkmanagement')
+        ->name('medewerker.destroy');
+
+    // ============================
+    // BESCHIKBAARHEID BEHEER
+    // ============================
     // Beschikbaarheid routes - accessible for all employees
     Route::resource('beschikbaarheid', BeschikbaarheidController::class);
     Route::get('/communicatie/{patientId}', [CommunicatieController::class, 'index'])

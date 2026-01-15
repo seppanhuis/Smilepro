@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreMedewerkerRequest;
+use App\Http\Requests\UpdateMedewerkerRequest;
 use App\Models\Medewerker;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -33,13 +34,17 @@ class MedewerkerController extends Controller
         if ($request->has('test_empty') && $request->get('test_empty') == '1') {
             $medewerkers = collect();
         } else {
-            // Haal alle users op die een medewerker rol hebben
+            // Haal alle users op die een medewerker rol hebben EN een medewerker record hebben
             $medewerkers = \App\Models\User::whereIn('rol_naam', [
                 'Assistent',
                 'Tandarts',
                 'Mondhygiënist',
                 'Praktijkmanagement'
-            ])->orderBy('rol_naam', 'asc')->orderBy('gebruikersnaam', 'asc')->get();
+            ])
+            ->whereHas('persoon.medewerker') // Alleen users met een actief medewerker record
+            ->orderBy('rol_naam', 'asc')
+            ->orderBy('gebruikersnaam', 'asc')
+            ->get();
         }
 
         return view('medewerker.index', [
@@ -202,26 +207,232 @@ class MedewerkerController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Toon het formulier voor het wijzigen van een bestaande medewerker
+     *
+     * Deze methode toont het formulier waar een bestaande medewerker kan worden gewijzigd.
+     * Alleen toegankelijk voor gebruikers met de rol 'Praktijkmanagement' of 'Administrator'.
+     *
+     * @param Medewerker $medewerker De medewerker die gewijzigd moet worden
+     * @return View|RedirectResponse
      */
-    public function edit(Medewerker $medewerker)
+    public function edit(Medewerker $medewerker): View|RedirectResponse
     {
-        //
+        try {
+            // Log de actie voor audit trail
+            Log::info('Medewerker wijzigformulier geopend', [
+                'user_id' => auth()->id(),
+                'user_email' => auth()->user()->email,
+                'medewerker_id' => $medewerker->id,
+                'timestamp' => now(),
+            ]);
+
+            // Laad relaties
+            $medewerker->load(['persoon.gebruiker']);
+
+            // Definieer beschikbare opties voor dropdowns
+            $medewerkerTypes = [
+                'Assistent' => 'Assistent',
+                'Mondhygiënist' => 'Mondhygiënist',
+                'Tandarts' => 'Tandarts',
+                'Orthodontist' => 'Orthodontist',
+                'Praktijkmanagement' => 'Praktijkmanagement',
+            ];
+
+            return view('medewerker.edit', [
+                'title' => 'Medewerker Wijzigen',
+                'medewerker' => $medewerker,
+                'medewerkerTypes' => $medewerkerTypes,
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Fout bij laden medewerker wijzigformulier', [
+                'user_id' => auth()->id(),
+                'medewerker_id' => $medewerker->id,
+                'error' => $e->getMessage(),
+                'timestamp' => now(),
+            ]);
+
+            return redirect()
+                ->route('medewerker.index')
+                ->with('error', 'Medewerker kon niet worden geladen');
+        }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update een bestaande medewerker in de database
+     *
+     * Deze methode verwerkt het formulier voor het wijzigen van een medewerker.
+     * Het gebruikt een stored procedure voor database validatie en transactie management.
+     * Bevat uitgebreide error handling, logging en security maatregelen.
+     *
+     * @param UpdateMedewerkerRequest $request Gevalideerde form request
+     * @param Medewerker $medewerker De medewerker die gewijzigd moet worden
+     * @return RedirectResponse
      */
-    public function update(Request $request, Medewerker $medewerker)
+    public function update(UpdateMedewerkerRequest $request, Medewerker $medewerker): RedirectResponse
     {
-        //
+        try {
+            // Log het begin van de operatie
+            Log::info('Poging tot wijzigen van medewerker', [
+                'user_id' => auth()->id(),
+                'user_email' => auth()->user()->email,
+                'medewerker_id' => $medewerker->id,
+                'medewerker_email' => $request->email,
+                'timestamp' => now(),
+            ]);
+
+            // Update medewerker via stored procedure
+            $result = Medewerker::updateViaProcedure($medewerker->id, [
+                'email' => $request->email,
+                'voornaam' => $request->voornaam,
+                'tussenvoegsel' => $request->tussenvoegsel,
+                'achternaam' => $request->achternaam,
+                'geboortedatum' => $request->geboortedatum,
+                'medewerker_type' => $request->medewerker_type,
+                'specialisatie' => $request->specialisatie,
+                'is_actief' => $request->has('is_actief'),
+                'opmerking' => $request->opmerking,
+            ]);
+
+            // Controleer resultaat
+            if (!$result['success']) {
+                Log::warning('Stored procedure validatie gefaald bij wijzigen', [
+                    'user_id' => auth()->id(),
+                    'medewerker_id' => $medewerker->id,
+                    'error_message' => $result['message'],
+                    'timestamp' => now(),
+                ]);
+
+                return redirect()
+                    ->back()
+                    ->withInput()
+                    ->with('error', $result['message']);
+            }
+
+            // Log succesvolle wijziging
+            Log::info('Medewerker succesvol gewijzigd', [
+                'user_id' => auth()->id(),
+                'medewerker_id' => $medewerker->id,
+                'medewerker_email' => $request->email,
+                'timestamp' => now(),
+            ]);
+
+            // Redirect met succesmelding
+            return redirect()
+                ->route('medewerker.index')
+                ->with('success', 'Medewerker succesvol gewijzigd');
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Log de database fout
+            Log::error('Database fout bij wijzigen medewerker', [
+                'user_id' => auth()->id(),
+                'medewerker_id' => $medewerker->id,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'timestamp' => now(),
+            ]);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Er is een fout opgetreden bij het opslaan. Probeer het opnieuw.');
+
+        } catch (\Exception $e) {
+            // Log de algemene fout
+            Log::error('Onverwachte fout bij wijzigen medewerker', [
+                'user_id' => auth()->id(),
+                'medewerker_id' => $medewerker->id,
+                'error_message' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString(),
+                'timestamp' => now(),
+            ]);
+
+            return redirect()
+                ->back()
+                ->withInput()
+                ->with('error', 'Er is een onverwachte fout opgetreden. Neem contact op met de beheerder.');
+        }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Verwijder een medewerker uit de database
+     *
+     * Deze methode verwijdert een medewerker via een stored procedure.
+     * De stored procedure controleert of de medewerker verwijderd mag worden
+     * (bijv. niet inactief, geen gekoppelde afspraken).
+     * Bevat uitgebreide error handling, logging en security maatregelen.
+     *
+     * @param Medewerker $medewerker De medewerker die verwijderd moet worden
+     * @return RedirectResponse
      */
-    public function destroy(Medewerker $medewerker)
+    public function destroy(Medewerker $medewerker): RedirectResponse
     {
-        //
+        try {
+            // Log het begin van de operatie
+            Log::info('Poging tot verwijderen van medewerker', [
+                'user_id' => auth()->id(),
+                'user_email' => auth()->user()->email,
+                'medewerker_id' => $medewerker->id,
+                'medewerker_nummer' => $medewerker->nummer,
+                'timestamp' => now(),
+            ]);
+
+            // Verwijder medewerker via stored procedure
+            $result = Medewerker::deleteViaProcedure($medewerker->id);
+
+            // Controleer resultaat
+            if (!$result['success']) {
+                Log::warning('Stored procedure validatie gefaald bij verwijderen', [
+                    'user_id' => auth()->id(),
+                    'medewerker_id' => $medewerker->id,
+                    'error_message' => $result['message'],
+                    'timestamp' => now(),
+                ]);
+
+                return redirect()
+                    ->back()
+                    ->with('error', $result['message']);
+            }
+
+            // Log succesvolle verwijdering
+            Log::info('Medewerker succesvol verwijderd', [
+                'user_id' => auth()->id(),
+                'medewerker_id' => $medewerker->id,
+                'medewerker_nummer' => $medewerker->nummer,
+                'timestamp' => now(),
+            ]);
+
+            // Redirect met succesmelding
+            return redirect()
+                ->route('medewerker.index')
+                ->with('success', 'Medewerker succesvol verwijderd');
+
+        } catch (\Illuminate\Database\QueryException $e) {
+            // Log de database fout
+            Log::error('Database fout bij verwijderen medewerker', [
+                'user_id' => auth()->id(),
+                'medewerker_id' => $medewerker->id,
+                'error_message' => $e->getMessage(),
+                'error_code' => $e->getCode(),
+                'timestamp' => now(),
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('error', 'Er is een fout opgetreden bij het verwijderen. Probeer het opnieuw.');
+
+        } catch (\Exception $e) {
+            // Log de algemene fout
+            Log::error('Onverwachte fout bij verwijderen medewerker', [
+                'user_id' => auth()->id(),
+                'medewerker_id' => $medewerker->id,
+                'error_message' => $e->getMessage(),
+                'error_trace' => $e->getTraceAsString(),
+                'timestamp' => now(),
+            ]);
+
+            return redirect()
+                ->back()
+                ->with('error', 'Er is een onverwachte fout opgetreden. Neem contact op met de beheerder.');
+        }
     }
 }

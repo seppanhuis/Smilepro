@@ -12,6 +12,12 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="rounded-md bg-red-50 p-4 dark:bg-red-900/20">
+                <p class="text-sm font-medium text-red-800 dark:text-red-200">{{ session('error') }}</p>
+            </div>
+        @endif
+
         <x-table.index :headers="[
             __('Medewerker'),
             __('Van datum'),

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -84,5 +85,13 @@ class User extends Authenticatable
     public function setNameAttribute($value): void
     {
         $this->attributes['gebruikersnaam'] = $value;
+    }
+
+    /**
+     * Get the persoon record associated with this user
+     */
+    public function persoon(): HasOne
+    {
+        return $this->hasOne(Persoon::class, 'gebruiker_id');
     }
 }
